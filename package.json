@@ -1,0 +1,28 @@
+{
+  "name": "personal-ai-agent",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.8.1",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev:api": "pnpm --filter @personal-agent/api dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.30",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.3.1",
+    "cors": "^2.8.6",
+    "fastify": "^5.12.7"
+  }
+}
