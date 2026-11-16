@@ -20,7 +20,7 @@
     "db:smoke": "tsx packages/infrastructure/src/demo.ts"
   },
   "devDependencies": {
-    "@types/node": "^20.17.30",
+    "@types/node": "^22.20.5",
     "dotenv": "^18.0.9",
     "drizzle-orm": "^0.44.7",
     "tsx": "^4.19.3",

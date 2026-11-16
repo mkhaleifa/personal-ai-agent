@@ -1,4 +1,3 @@
-
 {
   "name": "@personal-agent/api",
   "version": "0.1.0",
@@ -8,14 +7,17 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "echo \"No API tests yet\""
+    "test": "vitest run"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.1",
     "@personal-agent/core": "workspace:*",
-    "fastify": "^5.3.2"
+    "@personal-agent/infrastructure": "workspace:^",
+    "fastify": "^5.3.2",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/node": "^20.17.30"
+    "@types/node": "^22.20.5",
+    "vitest": "^5.1.0"
   }
 }
