@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@personal-agent/core": "workspace:*",
-    "groq-sdk": "^"
+    "groq-sdk": "^1.6.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

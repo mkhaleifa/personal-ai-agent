@@ -3,7 +3,7 @@ import type { AppDatabase } from "../db/client.js";
 import { createUserRepository } from "./user.repository.js";
 import { createConversationRepository } from "./conversation.repository.js";
 import { createMessageRepository } from "./message.repository.js";
-
+import {DrizzleAgentRunRepository} from "./agent-run.repository.js";
 export function createRepositories(db: AppDatabase) {
     return {
         users: createUserRepository(db),
@@ -11,5 +11,8 @@ export function createRepositories(db: AppDatabase) {
         conversations: createConversationRepository(db),
 
         messages: createMessageRepository(db),
+
+        agentRuns: new DrizzleAgentRunRepository(db),
+
     };
 }

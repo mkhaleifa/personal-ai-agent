@@ -1,0 +1,25 @@
+{
+  "name": "@personal-agent/agent-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "echo \"Agent runtime tests will be added\""
+  },
+  "dependencies": {
+    "@langchain/core": "^1.4.1",
+    "@langchain/langgraph": "^1.7.5",
+    "@personal-agent/core": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

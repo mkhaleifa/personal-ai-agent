@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^11.0.1",
+    "@personal-agent/agent-runtime": "workspace:^",
     "@personal-agent/core": "workspace:*",
     "@personal-agent/infrastructure": "workspace:^",
     "@personal-agent/integrations": "workspace:^",

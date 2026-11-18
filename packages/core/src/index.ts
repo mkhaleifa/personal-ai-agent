@@ -1,4 +1,3 @@
-
 export type UserId = string;
 export type ConversationId = string;
 export type MessageId = string;
@@ -110,6 +109,32 @@ export interface MessageRepository {
         userId: UserId,
         limit?: number,
     ): Promise<Message[]>;
+}
+
+export interface CreateAgentRunInput {
+    conversationId: ConversationId;
+}
+
+export interface CompleteAgentRunInput {
+    iterationCount: number;
+    toolCallCount: number;
+    stopReason: string;
+}
+
+export interface AgentRunRepository {
+    create(input: CreateAgentRunInput): Promise<AgentRun>;
+
+    markRunning(id: AgentRunId): Promise<AgentRun | null>;
+
+    complete(
+        id: AgentRunId,
+        input: CompleteAgentRunInput
+    ): Promise<AgentRun | null>;
+
+    fail(
+        id: AgentRunId,
+        error: string
+    ): Promise<AgentRun | null>;
 }
 
 export * from "./llm.js";

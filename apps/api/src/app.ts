@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
-
+import { registerAgentRoutes } from "./routes/agent.js";
 import type { createRepositories } from "@personal-agent/infrastructure";
 
 import { registerUserRoutes } from "./routes/users.js";
@@ -25,6 +25,12 @@ export async function createApp(
     });
 
     await registerAIRoutes(
+        app,
+        repositories,
+        llmProvider
+    );
+
+    await registerAgentRoutes(
         app,
         repositories,
         llmProvider
