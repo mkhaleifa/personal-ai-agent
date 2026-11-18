@@ -13,6 +13,7 @@
     "@fastify/cors": "^11.0.1",
     "@personal-agent/core": "workspace:*",
     "@personal-agent/infrastructure": "workspace:^",
+    "@personal-agent/integrations": "workspace:^",
     "fastify": "^5.3.2",
     "zod": "^4.6.7"
   },

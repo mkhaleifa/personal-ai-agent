@@ -5,12 +5,15 @@ import type { createRepositories } from "@personal-agent/infrastructure";
 
 import { registerUserRoutes } from "./routes/users.js";
 import { registerConversationRoutes } from "./routes/conversations.js";
+import type { LLMProvider } from "@personal-agent/core";
+import { registerAIRoutes } from "./routes/ai.js";
 
 type Repositories = ReturnType<typeof createRepositories>;
 
 export async function createApp(
     repositories: Repositories,
-) {
+    llmProvider: LLMProvider | null = null
+){
     const app = Fastify({
         logger: true,
     });
@@ -20,6 +23,12 @@ export async function createApp(
         allowedHeaders: ["content-type", "x-user-id"],
         methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     });
+
+    await registerAIRoutes(
+        app,
+        repositories,
+        llmProvider
+    );
 
     app.get("/health", async () => {
         return {
