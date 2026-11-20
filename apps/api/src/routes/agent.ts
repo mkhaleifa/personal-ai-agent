@@ -5,8 +5,12 @@ import {
     createRepositories,
 } from "@personal-agent/infrastructure";
 
+
+
 import {
     createAgentGraph,
+    createDefaultToolRegistry,
+    DEFAULT_TOOL_POLICY,
 } from "@personal-agent/agent-runtime";
 
 import type {
@@ -97,10 +101,14 @@ export async function registerAgentRoutes(
                 conversationId,
             });
 
+
+
             const graph = createAgentGraph({
                 provider,
                 messages: repositories.messages,
                 agentRuns: repositories.agentRuns,
+                toolRegistry: createDefaultToolRegistry(),
+                toolPolicy: DEFAULT_TOOL_POLICY,
             });
 
             try {
@@ -110,6 +118,7 @@ export async function registerAgentRoutes(
                     runId: run.id,
                 });
 
+
                 return reply.code(200).send({
                     data: {
                         runId: run.id,
@@ -118,7 +127,7 @@ export async function registerAgentRoutes(
                         assistantResponse: result.assistantResponse,
                         status: "completed",
                         iterationCount: result.iterationCount,
-                        toolCallCount: 0,
+                        toolCallCount: result.toolCallCount,
                     },
                 });
             } catch (error) {

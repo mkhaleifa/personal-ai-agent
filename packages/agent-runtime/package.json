@@ -14,12 +14,15 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "echo \"Agent runtime tests will be added\""
+    "test": "vitest run"
   },
   "dependencies": {
     "@langchain/core": "^1.4.1",
     "@langchain/langgraph": "^1.7.5",
     "@personal-agent/core": "workspace:*",
     "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0"
   }
 }

@@ -11,45 +11,27 @@ LLM provider implementation.
 
 ## Execution Flow
 
-1. The API validates the user and conversation.
-2. The user message is persisted.
-3. A pending agent run is created.
-4. LangGraph marks the run as running.
-5. Conversation history is loaded.
-6. The LLM provider generates a response.
-7. The assistant response is persisted.
-8. The agent run is marked as completed.
+1. The model receives available tool definitions.
+2. The model returns a tool-call request.
+3. The graph checks the tool-call budget.
+4. The Tool Registry checks permissions.
+5. Arguments are parsed and validated using Zod.
+6. The tool executes with a timeout.
+7. The result is returned to the model.
+8. The model generates a final answer.
 
-## Graph Nodes
+## Security
 
-- mark_running
-- load_history
-- generate_response
-- persist_response
-- complete_run
-
-## State
-
-The graph state contains:
-
-- userId
-- conversationId
-- runId
-- history
-- assistantResponse
-- iterationCount
-
-## Error Handling
-
-If graph execution fails, the API marks the
-agent run as failed and returns an error response.
+- Tools must be explicitly registered.
+- Only permitted tools are exposed to the model.
+- Tool arguments are validated with Zod.
+- Tool execution has a timeout.
+- The agent has a maximum tool-call budget.
+- Arbitrary code execution is not supported.
 
 ## Current Limitations
 
-- No tool execution yet.
-- No conditional routing yet.
-- No streaming yet.
-- No graph checkpoint persistence yet.
-- No long-term memory retrieval yet.
-
-These capabilities will be introduced in later stages.
+- Tool permissions are configured by the server.
+- Individual tool-call audit records are not yet stored.
+- Human approval workflows are not implemented.
+- Parallel tool execution is disabled.

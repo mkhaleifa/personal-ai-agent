@@ -1,4 +1,6 @@
+
 import Groq from "groq-sdk";
+
 import type {
     LLMMessage,
     LLMGenerationOptions,
@@ -26,7 +28,8 @@ export class GroqProvider implements LLMProvider {
             apiKey: options.apiKey,
         });
 
-        this.model = options.model ?? "openai/gpt-oss-20b";
+        this.model =
+            options.model ?? "openai/gpt-oss-20b";
     }
 
     async generate(
@@ -37,19 +40,69 @@ export class GroqProvider implements LLMProvider {
             throw new Error("At least one message is required");
         }
 
-        const completion = await this.client.chat.completions.create({
-            model: this.model,
+        const groqMessages = messages.map((message) => {
+            if (message.role === "tool") {
+                if (!message.toolCallId || !message.name) {
+                    throw new Error(
+                        "Tool messages require toolCallId and name"
+                    );
+                }
 
-            messages: messages.map((message) => ({
-                role: message.role,
-                content: message.content,
-            })),
+                return {
+                    role: "tool" as const,
+                    tool_call_id: message.toolCallId,
+                    name: message.name,
+                    content: message.content ?? "",
+                };
+            }
 
-            temperature: options.temperature ?? 0.2,
+            if (message.role === "assistant" && message.toolCalls) {
+                return {
+                    role: "assistant" as const,
+                    content: message.content,
+                    tool_calls: message.toolCalls.map((toolCall) => ({
+                        id: toolCall.id,
+                        type: "function" as const,
+                        function: {
+                            name: toolCall.name,
+                            arguments: toolCall.arguments,
+                        },
+                    })),
+                };
+            }
 
-            max_completion_tokens:
-                options.maxCompletionTokens ?? 1024,
+            if (
+                message.role === "system" ||
+                message.role === "user" ||
+                message.role === "assistant"
+            ) {
+                return {
+                    role: message.role,
+                    content: message.content ?? "",
+                };
+            }
+
+            throw new Error("Unsupported LLM message role");
         });
+
+        const completion =
+            await this.client.chat.completions.create({
+                model: this.model,
+                messages: groqMessages,
+
+                temperature: options.temperature ?? 0.2,
+
+                max_completion_tokens:
+                    options.maxCompletionTokens ?? 1024,
+
+                ...(options.tools?.length
+                    ? {
+                        tools: options.tools,
+                        tool_choice: "auto" as const,
+                        parallel_tool_calls: false,
+                    }
+                    : {}),
+            });
 
         const choice = completion.choices[0];
 
@@ -57,11 +110,14 @@ export class GroqProvider implements LLMProvider {
             throw new Error("Groq returned an empty completion");
         }
 
-        const content = choice.message.content;
+        const content = choice.message.content ?? "";
 
-        if (typeof content !== "string") {
-            throw new Error("Groq returned an empty or unsupported response");
-        }
+        const toolCalls =
+            choice.message.tool_calls?.map((toolCall) => ({
+                id: toolCall.id,
+                name: toolCall.function.name,
+                arguments: toolCall.function.arguments,
+            }));
 
         const usage = completion.usage;
 
@@ -79,6 +135,8 @@ export class GroqProvider implements LLMProvider {
                     totalTokens: usage.total_tokens,
                 }
                 : null,
+
+            toolCalls,
         };
     }
 }

@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import type { LLMMessage } from "@personal-agent/core";
 
 export const AgentState = z.object({
@@ -8,12 +9,17 @@ export const AgentState = z.object({
 
     runId: z.string(),
 
-    history: z.array(z.custom<LLMMessage>()).default(() => []),
+    messages: z.array(z.custom<LLMMessage>()).default(() => []),
 
     assistantResponse: z.string().default(""),
 
     iterationCount: z.number().default(0),
+
+    toolCallCount: z.number().default(0),
+
+    stopReason: z.string().default(""),
 });
+
 
 export type AgentStateType = z.infer<typeof AgentState>;
 
